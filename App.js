@@ -1,21 +1,74 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { WebView } from "react-native-webview";
+import { Button, View, Text } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { Camera } from 'expo-camera';
 
-export default function App() {
+//
+function HomeScreen({ navigation, route }) {
+  function lastDriverId() {
+    if (route.params && route.params.driverId) {
+      return `Previously verified driver ID: ${route.params.driverId}`;
+      a;
+    } else {
+      return "";
+    }
+  }
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text>EnvoyApp!</Text>
+      <Button
+        title="Verify Identity"
+        onPress={() => navigation.navigate("IVM")}
+      />
+      <Text>{lastDriverId()}</Text>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+//
+function IVMScreen({ navigation }) {
+  function changedURL(state) {
+    if (state.url.indexOf("https://my-test-callback") != -1) {
+      let driverId = state.url.split("driver_id=")[1];
+      navigation.navigate("Home", { driverId });
+      return false;
+    }
+    return true;
+  }
+  return (
+    <View style={{ flex: 1 }}>
+      <WebView
+        onShouldStartLoadWithRequest={changedURL}
+        source={{
+          uri:
+            "https://ivm.digisure.tech/verify?id=8&env=partner&redirect=https%3A%2F%2Fmy-test-callback",
+        }}
+      />
+    </View>
+  );
+}
+
+//
+const Stack = createStackNavigator();
+function App() {
+  const [hasPermission, setHasPermission] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="IVM" component={IVMScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+export default App;
