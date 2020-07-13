@@ -41,6 +41,7 @@ function IVMScreen({ navigation }) {
     <View style={{ flex: 1 }}>
       <WebView
         onShouldStartLoadWithRequest={changedURL}
+        mediaPlaybackRequiresUserAction={false}
         source={{
           uri:
             "https://ivm.digisure.tech/verify?id=8&env=partner&redirect=https%3A%2F%2Fmy-test-callback",
