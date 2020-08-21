@@ -44,7 +44,7 @@ function IVMScreen({ navigation }) {
         mediaPlaybackRequiresUserAction={false}
         source={{
           uri:
-            "https://ivm.digisure.tech/verify?id=8&env=partner&redirect=https%3A%2F%2Fmy-test-callback",
+            "https://ivm.digisure.tech/verify?id=5fbb8069d5&env=partner&redirect=https%3A%2F%2Fmy-test-callback&trigger_trustscore=false",
         }}
       />
     </View>
