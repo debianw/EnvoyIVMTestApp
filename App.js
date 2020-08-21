@@ -10,7 +10,6 @@ function HomeScreen({ navigation, route }) {
   function lastDriverId() {
     if (route.params && route.params.driverId) {
       return `Previously verified driver ID: ${route.params.driverId}`;
-      a;
     } else {
       return "";
     }
